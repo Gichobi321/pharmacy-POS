@@ -1,0 +1,124 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+// Define classes
+
+class Drug {
+public:
+    std::string name;
+    double price;
+
+    Drug(std::string name, double price) : name(name), price(price) {}
+};
+
+class Prescription {
+public:
+    std::string patientName;
+    std::vector<Drug> drugs;
+
+    Prescription(std::string patientName) : patientName(patientName) {}
+
+    void addDrug(Drug drug) {
+       a drugs.push_back(drug);
+    }
+
+    double getTotalPrice() {
+        double total = 0.0;
+        for (const Drug& drug : drugs) {
+            total += drug.price;
+        }
+        return total;
+    }
+};
+
+class Pharmacy {
+private:
+    std::vector<Prescription> prescriptions;
+
+public:
+    void processPrescription() {
+        std::string patientName;
+        std::cout << "Enter patient name: ";
+        std::cin >> patientName;
+
+        Prescription prescription(patientName);
+
+        std::string drugName;
+        double drugPrice;
+        char addMore;
+
+        do {
+            std::cout << "Enter drug name: ";
+            std::cin >> drugName;
+
+            std::cout << "Enter drug price: ";
+            std::cin >> drugPrice;
+
+            prescription.addDrug(Drug(drugName, drugPrice));
+
+            std::cout << "Add more drugs? (y/n): ";
+            std::cin >> addMore;
+        } while (addMore == 'y');
+
+        prescriptions.push_back(prescription);
+
+        std::cout << "Prescription processed successfully!" << std::endl;
+    }
+
+    void printPrescriptions() {
+        if (prescriptions.empty()) {
+            std::cout << "No prescriptions available." << std::endl;
+            return;
+        }
+
+        std::cout << "Prescriptions:" << std::endl;
+
+        for (const Prescription& prescription : prescriptions) {
+            std::cout << "Patient: " << prescription.patientName << std::endl;
+
+            std::cout << "Drugs:" << std::endl;
+            for (const Drug& drug : prescription.drugs) {
+                std::cout << "- " << drug.name << " ($" << drug.price << ")" << std::endl;
+            }
+
+            std::cout << "Total Price: $" << prescription.getTotalPrice() << std::endl;
+
+            std::cout << "-----------------------" << std::endl;
+        }
+    }
+};
+
+// Main function
+
+int main() {
+    Pharmacy pharmacy;
+    int choice;
+
+    do {
+        std::cout << "Pharmacy Point of Sale (POS) System" << std::endl;
+        std::cout << "1. Process Prescription" << std::endl;
+        std::cout << "2. View Prescriptions" << std::endl;
+        std::cout << "3. Exit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                pharmacy.processPrescription();
+                break;
+            case 2:
+                pharmacy.printPrescriptions();
+                break;
+            case 3:
+                std::cout << "Exiting..." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+
+        std::cout << std::endl;
+    } while (choice != 3);
+
+    return 0;
+}
